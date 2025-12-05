@@ -61,20 +61,21 @@ jobs:
           path: ./wheelhouse/*.whl
 
   build_wheels_graalpy:
-    name: GraalPy on ${{ matrix.os }}
+    name: GraalPy ${{ matrix.graalpy-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        graalpy-version: ["311_242", "312_250"]
 
     steps:
       - uses: actions/checkout@v5
 
       - uses: pypa/cibuildwheel@v3.3.0
         env:
-          CIBW_BUILD: "gp*"
+          CIBW_BUILD: "gp${{ matrix.graalpy-version }}-*"
           CIBW_ENABLE: graalpy
 
       - uses: actions/upload-artifact@v4
